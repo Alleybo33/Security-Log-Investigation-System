@@ -23,7 +23,7 @@ def run_shell_command(command, logfile):
 
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {e.cmd}", file=sys.stderr)
-        print(f"Stderr: {e.stderr)", file=sys.stderr)
+        print(f"Stderr: {e.stderr}", file=sys.stderr)
         return None
     except FileNotFoundError:
         print(f"Error: Log file not found at {logfile}", file=sys.stderr)
@@ -32,11 +32,11 @@ def run_shell_command(command, logfile):
 # --- Analysis Function ----
 
 def get_top_ips(logfile):
-    printf("--- Top 20 Source IPs ---")
+    print("--- Top 20 Source IPs ---")
 
     #This is exact cmd
     command = "awk '{print $1}' LOGFILE | sort | uniq -c | sort -rn | head -n 20"
-    run_shell_command(command, logfile)
+    output = run_shell_command(command, logfile)
     return output
 
 def get_top_user_agents(logfile):
@@ -84,35 +84,63 @@ def run_full_report(logfile):
 
     top_ip_output = get_top_ips(logfile)
 
-    if no top_ip_output:
-        print("Cloud not determine Top IP. Stopping full report.", file=sys.stderr)
+    if not top_ip_output:
+        print("Could not determine Top IP. Stopping full report.", file=sys.stderr)
         return
 
     try:
         #Etract the 1 IP from the output
 
         first_line = top_ip_output.splitlines()[0]
-        top_ip = first_line.strip().split('')[-1]
+        top_ip = first_line.strip().split(' ')[-1]
 
         if not top_ip:
             print("Could not parse Top IP from output.", file=sys.stderr)
             return
 
-        except IndexError:
-            print("No IPs found in log. Stopping full report.", file=sys.stderr)
-            return
+    except IndexError:
+        print("No IPs found in log. Stopping full report.", file=sys.stderr)
+        return
 
 
-        #Automatically run the deep-dive report on that IP
-        get_ip_report(logfile, top_ip)
+    #Automatically run the deep-dive report on that IP
+    get_ip_report(logfile, top_ip)
 
-        #Run other summary report
-        get_top_user_agents(logfile)
-        find_scanners(logfile)
-
-
-        print("\n--- Full Report Complete ---")
+     #Run other summary report
+    get_top_user_agents(logfile)
+    find_scanners(logfile)
 
 
+    print("\n--- Full Report Complete ---")
 
-#---- Main Program Execution ---
+
+
+# --- Main Program Execution ---
+
+def main():
+    parser = argparse.ArgumentParser(description="Security Log Investigation System (SLIS)" )
+    # -----------------------------------
+
+    parser.add_argument("-d", "--directory", required=True, help="Path to the access.log file")
+    parser.add_argument("-t", "--type", required=True, help="Type of analysis to run", choices=['top_ips', 'top_ua', 'scanners', 'full-report', 'ip-report'])
+    parser.add_argument("-i", "--ip", help="IP address to use for 'ip-report' type")
+
+    args = parser.parse_args()
+
+    if args.type == 'top-ips':
+        get_top_ips(args.directory)
+
+    elif args.type == 'top-ua':
+        get_top_user_agents(args.directory)
+
+    elif args.type == 'scanners':
+        find_scanners(args.directory)
+
+    elif args.type == 'ip-report':
+        if not args.ip:
+            print("Error: The 'ip-report' type requires an IP address. Use -i <IP>", file=sys.stderr)
+            sys.exit(1)
+        get_ip_report(args.directory, args.ip)
+
+if __name__ == "__main__":
+    main()
