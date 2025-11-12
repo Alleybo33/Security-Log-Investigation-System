@@ -35,7 +35,7 @@ SLIS automates the investigation of web server access logs by producing actionab
 ```bash
 git clone https://github.com/Alleybo33/Security-Log-Investigation-System.git
 cd Security-Log-Investigation-System
-
+```
 2. Make the Script Executable
 chmod +x slis.py
 
