@@ -36,13 +36,13 @@ SLIS automates the investigation of web server access logs by producing actionab
 git clone https://github.com/Alleybo33/Security-Log-Investigation-System.git
 cd Security-Log-Investigation-System
 ```
-2. Make the Script Executable
+## 2. Make the Script Executable
 chmod +x slis.py
 
-💻 Usage
+## 💻 Usage
 ./slis.py -d <logfile> -t <type> [options]
 
-Arguments
+## Arguments
 
 -d, --directory — (required) path to the access log file.
 
@@ -52,28 +52,28 @@ Arguments
 
 -o, --output — (optional) file to write output to (silences console output).
 
-Examples
+## Examples
 
-Run a full automated report:
+## Run a full automated report:
 
 ./slis.py -d /var/log/nginx/access.log -t full-report
 
 
-Run a full report and save to file:
+## Run a full report and save to file:
 
 ./slis.py -d /var/log/apache2/access.log -t full-report -o investigation-01.txt
 
 
-Check for known scanners:
+## Check for known scanners:
 
 ./slis.py -d access.log -t scanners
 
 
-Investigate a specific suspicious IP:
+## Investigate a specific suspicious IP:
 
 ./slis.py -d access.log -t ip-report -i 172.21.0.1
 
-🔮 Future Features
+## 🔮 Future Features
 
  Add -t sqli module to detect common SQL injection patterns
 
@@ -83,6 +83,6 @@ Investigate a specific suspicious IP:
 
  Detect modern web attacks (GraphQL abuse, API fuzzing)
 
-🧑‍💻 Author
+## 🧑‍💻 Author
 
 Developed by @Alleybo33
