@@ -1,7 +1,6 @@
 # 🔍 System Log Investigation System (SLIS)
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue)](https://www.python.org/)  
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
 [![Status](https://img.shields.io/badge/Status-Stable-success)]()
 
 A Python-based **CLI log triage tool** for incident responders and SOC analysts.  
